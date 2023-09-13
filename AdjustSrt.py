@@ -1,8 +1,15 @@
 import re
+import os
 
 # 定义需要转写的 srt 文件位置,# 输出文件保持源文件相同路径，文件名为 adjusted_源文件名
-srt_file = 'D:/OneDrive/HR HK Lessons/5140 Statistical Methods in Quantitative Finance/week1/5140 week1 音频.srt'
-output_file = 'D:/OneDrive/HR HK Lessons/5140 Statistical Methods in Quantitative Finance/week1/adjusted_5140 week1 音频.srt'
+srt_file = 'D:/OneDrive/HR HK Lessons/5310 Portfolio Optimization with R/week2/5310 week2 convex optimization problems .srt'
+
+# 获取文件的目录路径和基本名称
+directory = os.path.dirname(srt_file)
+filename = os.path.basename(srt_file)
+new_filename = filename.replace('.srt', '_adjusted.srt')
+# 生成输出文件的完整路径
+output_file = os.path.join(directory, new_filename)
 
 # 读取srt文件内容
 with open(srt_file, 'r') as file:
@@ -11,10 +18,11 @@ with open(srt_file, 'r') as file:
 # 将内容按空行分割成不同的组
 old_groups = re.split(r'\n\s*\n', content)
 
+# 用于记录当前该处理 old_groups 中的第几个组
 current_number = 0
-if_jump = 0
-new_groups = []
+# 用于在 new_groups 中的索引
 index = 0
+new_groups = []
 
 for i in range(len(old_groups)):
     # 如果 i 不等于 current_number 就跳过

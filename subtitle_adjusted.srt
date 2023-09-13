@@ -7,7 +7,7 @@ Welcome to this MBAFS 540.
 So for those who took my course before, long time no see.
 
 2
-00:00:08,800 --> 00:00:11,880
+00:00:08,800 --> 00:00:15,199
 So today, I will first spend a bit of time to talk about the information about this talk,
 
 3
@@ -27,11 +27,11 @@ But first of all, just let me introduce myself,
 in case you are new to my courses.
 
 7
-00:00:28,399 --> 00:00:32,119
+00:00:28,399 --> 00:00:34,159
 So my name is Dr. Deng-Chi Man, one of the lecturers in the Department of Mathematics.
 
 8
-00:00:34,159 --> 00:00:37,439
+00:00:34,159 --> 00:00:41,439
 So mainly in that department, I teach the course in financial mathematics, actual real-world mathematics,
 
 9
@@ -83,7 +83,7 @@ And here, this is my email.
 So in case you have any questions about the course,
 
 21
-00:01:22,239 --> 00:01:24,079
+00:01:22,239 --> 00:01:26,959
 or maybe if you have anything that you want to talk to me, something academic,
 
 22
@@ -95,7 +95,7 @@ then just send me an email.
 And for the office hour, so this semester,
 
 24
-00:01:34,040 --> 00:01:39,159
+00:01:34,040 --> 00:01:47,519
 I do have a regular office hour, which will be on every Thursday from 6.15 to 7.30,
 
 25
