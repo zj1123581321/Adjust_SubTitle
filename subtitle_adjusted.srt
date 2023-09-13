@@ -1,107 +1,39 @@
 0
-00:00:00,000 --> 00:00:04,360
-Welcome to this MBAFS 540.
+00:00:00,000 --> 00:00:08,800
+Welcome to this MBAFS 540. So for those who took my course before, long time no see.
 
 1
-00:00:04,360 --> 00:00:08,800
-So for those who took my course before, long time no see.
+00:00:08,800 --> 00:00:23,239
+So today, I will first spend a bit of time to talk about the information about this talk, about the logistics, cost-content, and of course, the most important thing is weight and scale.
 
 2
-00:00:08,800 --> 00:00:15,199
-So today, I will first spend a bit of time to talk about the information about this talk,
+00:00:23,239 --> 00:00:34,159
+But first of all, just let me introduce myself, in case you are new to my courses. So my name is Dr. Deng-Chi Man, one of the lecturers in the Department of Mathematics.
 
 3
-00:00:15,199 --> 00:00:18,800
-about the logistics, cost-content,
+00:00:34,159 --> 00:00:48,880
+So mainly in that department, I teach the course in financial mathematics, actual real-world mathematics, and sometimes I also teach the things like game theory, social choice theory, a lot of business.
 
 4
-00:00:18,800 --> 00:00:23,239
-and of course, the most important thing is weight and scale.
+00:00:48,880 --> 00:00:58,200
+If you are interested, you can audit my course. Not take my course, it will be terrible. And you will regret it, trust me.
 
 5
-00:00:23,239 --> 00:00:26,359
-But first of all, just let me introduce myself,
+00:00:58,200 --> 00:01:12,959
+So here is my contact information. So my office is at 13419, which is near the Nip 70 to 80. So just take the lift, go to third floor, then you can find that.
 
 6
-00:00:26,359 --> 00:00:28,399
-in case you are new to my courses.
+00:01:12,959 --> 00:01:19,239
+So very, very convenient. And here, this is my email.
 
 7
-00:00:28,399 --> 00:00:34,159
-So my name is Dr. Deng-Chi Man, one of the lecturers in the Department of Mathematics.
+00:01:19,239 --> 00:01:29,799
+So in case you have any questions about the course, or maybe if you have anything that you want to talk to me, something academic, then just send me an email.
 
 8
-00:00:34,159 --> 00:00:41,439
-So mainly in that department, I teach the course in financial mathematics, actual real-world mathematics,
+00:01:29,799 --> 00:01:53,239
+And for the office hour, so this semester, I do have a regular office hour, which will be on every Thursday from 6.15 to 7.30, which is the office hour for all my courses that I taught.
 
 9
-00:00:41,439 --> 00:00:44,679
-and sometimes I also teach the things like game theory,
-
-10
-00:00:44,679 --> 00:00:48,880
-social choice theory, a lot of business.
-
-11
-00:00:48,880 --> 00:00:51,640
-If you are interested, you can audit my course.
-
-12
-00:00:51,640 --> 00:00:55,439
-Not take my course, it will be terrible.
-
-13
-00:00:55,439 --> 00:00:58,200
-And you will regret it, trust me.
-
-14
-00:00:58,200 --> 00:01:00,920
-So here is my contact information.
-
-15
-00:01:00,920 --> 00:01:08,040
-So my office is at 13419, which is near the Nip 70 to 80.
-
-16
-00:01:08,040 --> 00:01:11,640
-So just take the lift, go to third floor,
-
-17
-00:01:11,640 --> 00:01:12,959
-then you can find that.
-
-18
-00:01:12,959 --> 00:01:15,760
-So very, very convenient.
-
-19
-00:01:15,760 --> 00:01:19,239
-And here, this is my email.
-
-20
-00:01:19,239 --> 00:01:22,239
-So in case you have any questions about the course,
-
-21
-00:01:22,239 --> 00:01:26,959
-or maybe if you have anything that you want to talk to me, something academic,
-
-22
-00:01:26,959 --> 00:01:29,799
-then just send me an email.
-
-23
-00:01:29,799 --> 00:01:34,040
-And for the office hour, so this semester,
-
-24
-00:01:34,040 --> 00:01:47,519
-I do have a regular office hour, which will be on every Thursday from 6.15 to 7.30,
-
-25
-00:01:47,519 --> 00:01:53,239
-which is the office hour for all my courses that I taught.
-
-26
-00:01:53,239 --> 00:01:58,239
+00:01:53,239 --> 00:01:53,239
 So mainly I teach all courses this semester.
