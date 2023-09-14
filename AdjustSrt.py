@@ -1,13 +1,13 @@
 import re
 import os
 
-# 每行字幕的最短字数，adjust_mode 为 2 时有效
+# 每行字幕的最短字数，adjust_mode 为 3 时有效
 min_length = 120
 max_length = 180
 
 
 def main():
-    srt_file = 'D:/MyFolders/Developments/0Python/230912_AdjustSubTitle/subtitle.srt'
+    srt_file = 'D:/Downloads/Documents/5140 week2_adjusted.srt'
     # 字幕的调整方式，
     # 1 为合并被断行的句子，
     # 2 在 1 的基础上，保证每行以非逗号结尾
@@ -48,7 +48,6 @@ def adjust_srt_content(old_groups):
             group = old_groups[i].strip().split('\n')
 
             if len(group) >= 3:
-                number = group[0]
                 time_range = group[1]
                 text = ' '.join(group[2:])
 
@@ -59,19 +58,22 @@ def adjust_srt_content(old_groups):
                 else:
                     # 合并时间段和字幕文本
                     time_range_start = re.search(r'(\d{2}:\d{2}:\d{2},\d{3})', time_range).group(1)
-                    # next_time_range_end = re.search(r'(\d{2}:\d{2}:\d{2},\d{3})', old_groups[i + 1]).group(1)
+                    # 判断 i 是否超出 old_groups 的索引范围，如果是则直接将当前字幕文本写入 new_groups，否则获取下一个时间段的结尾时间，即正则表达式中的第二个匹配项 re.findall
+                    # print(i, text)
+                    if i + 1 >= len(old_groups):
+                        new_groups.append(f"{index}\n{time_range}\n{text}")
+                        current_number += 1
+                    else:
                     #获取下一个时间段的结尾时间，即正则表达式中的第二个匹配项 re.findall
-                    next_time_range_end = re.findall(r'(\d{2}:\d{2}:\d{2},\d{3})', old_groups[i + 1])[1]
+                        next_time_range_end = re.findall(r'(\d{2}:\d{2}:\d{2},\d{3})', old_groups[i + 1])[1]
+                        new_time_range = f"{time_range_start} --> {next_time_range_end}"
 
-                    new_time_range = f"{time_range_start} --> {next_time_range_end}"
+                        current_text = text
+                        next_text = ' '.join(old_groups[i + 1].strip().split('\n')[2:])
+                        new_text = f"{current_text} {next_text}"
 
-                    current_text = text
-                    next_text = ' '.join(old_groups[i + 1].strip().split('\n')[2:])
-                    new_text = f"{current_text} {next_text}"
-
-                    new_groups.append(f"{index}\n{new_time_range}\n{new_text}")
-                    current_number += 2
-
+                        new_groups.append(f"{index}\n{new_time_range}\n{new_text}")
+                        current_number += 2
                 index += 1
     return new_groups
 
@@ -99,8 +101,9 @@ def adjust_srt_content_with_min_max(old_groups):
                     move_times = 1
                     while len(text) < min_length:
                         # 判断 i+move_times 是否超出 old_groups 的索引范围
-                        if i + move_times >= len(old_groups)-1:
-                            move_times = 0
+                        if i + move_times >= len(old_groups):
+                            print('out of range,len(old_groups):', len(old_groups))
+                            # move_times = 1
                             break
                         next_text = ' '.join(old_groups[i + move_times].strip().split('\n')[2:])
                         # 如果当前字幕文本加上下一个字幕文本的长度大于 max_length，就不再合并

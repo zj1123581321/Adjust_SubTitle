@@ -31,6 +31,14 @@ Clone 到本地后安装依赖，每次修改 `srt_file` 的路径即可使用�
 
 默认修改的字幕文件和源字幕文件在同一个文件夹之内，文件名会加 `_adjusted` 后缀。
 
-## 待办
+目前有三种模式：
 
-- [ ] 增加字幕单行最短字符长度限制，减少字幕行数，提高可读性。
+- 1 为合并被断行的句子，
+
+- 2 在 1 的基础上，保证每行以非逗号结尾
+
+- 3 在 1-2 的基础上，保证每一行的字数不小于目标值(需要修改代码头部 min_length 和 max_length)
+
+![a238efc8e01a2e5add3f61aca7ac7e9](D:\MyFolders\Developments\0Python\230912_AdjustSubTitle\assets\a238efc8e01a2e5add3f61aca7ac7e9.jpg)
+
+![a62c7ecbd2822d514a87ec97eb95555](D:\MyFolders\Developments\0Python\230912_AdjustSubTitle\assets\a62c7ecbd2822d514a87ec97eb95555.jpg)
