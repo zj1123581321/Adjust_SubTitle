@@ -8,7 +8,7 @@ if_need_spilt = True # 是否需要根据非逗号拆分字幕，时间戳根据
 
 
 def main():
-    srt_file = 'D:/OneDrive/HR HK Lessons/5030 Quantitative Modeling of Derivatives Securities/week3/HKUST Canvas - MAFS5030-L1.srt'
+    srt_file = 'D:/OneDrive/HR HK Lessons/5010 Stochastic Calculus/week3/HKUST Canvas - MAFS5010-L1.srt'
     # 字幕的调整方式，
     # 1 为合并被断行的句子，
     # 2 在 1 的基础上，保证每行以非逗号结尾
@@ -34,7 +34,7 @@ def read_and_split_srt_file(srt_file):
     old_groups = [group for group in old_groups if group != '']
     return old_groups
 
-# 拆分每行字幕。如果一行字幕的 1/3 长度内容里含有非逗号的标点，则拆分成两行字幕。同时时间戳按照开头到标点的长度占总长度的比例进行拆分。
+# 拆分每行字幕。如果一行字幕内容里含有非逗号的标点，则拆分成两行字幕。同时时间戳按照开头到标点的长度占总长度的比例进行拆分。
 def split_srt_content(old_groups):
     # 用于记录当前该处理 old_groups 中的第几个组
     current_number = 0
@@ -51,12 +51,11 @@ def split_srt_content(old_groups):
             if len(group) >= 3:
                 time_range = group[1]
                 text = ' '.join(group[2:])
-                # 检查当前字幕的前 1/3 内容是否含有非逗号的标点，如果有则拆分成两行字幕。
-                text_1_3 = text[:int(len(text)/3)]
-                # 如果当前字幕的前 1/3 内容有除了逗号以外的标点，则拆分成两行字幕
-                if re.search(r'[^\w,，\s]', text_1_3):
-                    # 获取当前字幕的前 1/3 内容的最后一个标点符号的索引
-                    last_punctuation_index = re.search(r'[^\w,，\s]', text_1_3).span()[1]
+                # 检查当前字幕是否含有非逗号的标点，如果有则拆分成两行字幕。text part 取小于 1 的数字，保证不会取到最后一个标点。
+                text_part = text[:int(len(text)*4/5)]
+                if re.search(r'[^\w,，\s]', text_part):
+                    # 获取当前字幕最后一个标点符号的索引
+                    last_punctuation_index = re.search(r'[^\w,，\s]', text_part).span()[1]
                     # print(i, last_punctuation_index)
                     # 根据最后一个标点将当前字幕拆分成两行字幕
                     text_1 = text[:last_punctuation_index]
