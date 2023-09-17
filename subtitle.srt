@@ -1,128 +1,43 @@
 0
-00:00:00,000 --> 00:00:04,360
-Welcome to this MBAFS 540.
+00:00:00,000 --> 00:00:13,480
+Good evening, good to see a lot of you. So let's have a quick review of what we talked
 
 1
-00:00:04,360 --> 00:00:08,800
-So for those who took my course before, long time no see.
+00:00:13,480 --> 00:00:23,320
+about last week. So we talked about three kinds of products last week, a bond, forward
 
 2
-00:00:08,800 --> 00:00:11,880
-So today, I will first spend a bit of time
+00:00:23,320 --> 00:00:31,000
+and future. So bond, you know the structure. You are going to receive a huge amount of
 
 3
-00:00:11,880 --> 00:00:15,199
-to talk about the information about this talk,
+00:00:31,000 --> 00:00:39,560
+money today or you are going to pay a huge amount of money. So the other side of the
 
 4
-00:00:15,199 --> 00:00:18,800
-about the logistics, cost-content,
+00:00:39,560 --> 00:00:48,039
+mortgage. So you pay a huge amount of money and then you are going to receive a coupon
 
 5
-00:00:18,800 --> 00:00:23,239
-and of course, the most important thing is weight and scale.
+00:00:48,039 --> 00:00:56,759
+payment for a fixed period. So say every half year or every three months or something like
 
 6
-00:00:23,239 --> 00:00:26,359
-But first of all, just let me introduce myself,
+00:00:56,759 --> 00:01:02,759
+that. And then at the end, the maturity day, you will get your principal back. You will
 
 7
-00:00:26,359 --> 00:00:28,399
-in case you are new to my courses.
+00:01:02,759 --> 00:01:11,760
+get all your money back. So this is a very safe product. And then we talked about forward.
 
 8
-00:00:28,399 --> 00:00:32,119
-So my name is Dr. Deng-Chi Man, one of the lecturers
+00:01:11,760 --> 00:01:17,359
+So if you want to calculate the bond price, you will start to calculating all the future
 
 9
-00:00:32,119 --> 00:00:34,159
-in the Department of Mathematics.
+00:01:17,359 --> 00:01:23,840
+cash flows, discount all of them to today and then sum them up, you will get the bond
 
 10
-00:00:34,159 --> 00:00:37,439
-So mainly in that department, I teach the course
-
-11
-00:00:37,439 --> 00:00:41,439
-in financial mathematics, actual real-world mathematics,
-
-12
-00:00:41,439 --> 00:00:44,679
-and sometimes I also teach the things like game theory,
-
-13
-00:00:44,679 --> 00:00:48,880
-social choice theory, a lot of business.
-
-14
-00:00:48,880 --> 00:00:51,640
-If you are interested, you can audit my course.
-
-15
-00:00:51,640 --> 00:00:55,439
-Not take my course, it will be terrible.
-
-16
-00:00:55,439 --> 00:00:58,200
-And you will regret it, trust me.
-
-17
-00:00:58,200 --> 00:01:00,920
-So here is my contact information.
-
-18
-00:01:00,920 --> 00:01:08,040
-So my office is at 13419, which is near the Nip 70 to 80.
-
-19
-00:01:08,040 --> 00:01:11,640
-So just take the lift, go to third floor,
-
-20
-00:01:11,640 --> 00:01:12,959
-then you can find that.
-
-21
-00:01:12,959 --> 00:01:15,760
-So very, very convenient.
-
-22
-00:01:15,760 --> 00:01:19,239
-And here, this is my email.
-
-23
-00:01:19,239 --> 00:01:22,239
-So in case you have any questions about the course,
-
-24
-00:01:22,239 --> 00:01:24,079
-or maybe if you have anything that you
-
-25
-00:01:24,079 --> 00:01:26,959
-want to talk to me, something academic,
-
-26
-00:01:26,959 --> 00:01:29,799
-then just send me an email.
-
-27
-00:01:29,799 --> 00:01:34,040
-And for the office hour, so this semester,
-
-28
-00:01:34,040 --> 00:01:39,159
-I do have a regular office hour, which
-
-29
-00:01:39,159 --> 00:01:47,519
-will be on every Thursday from 6.15 to 7.30,
-
-30
-00:01:47,519 --> 00:01:53,239
-which is the office hour for all my courses that I taught.
-
-31
-00:01:53,239 --> 00:01:58,239
-So mainly I teach all courses this semester.
-
+00:01:23,840 --> 00:01:30,840
+price. So that's how we calculate bond price. So for forward, we go back to this page 16.
