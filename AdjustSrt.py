@@ -1,20 +1,49 @@
 import re
 import os
+import zhipuai
+import json
 
 # 每行字幕的最短字数，adjust_mode 为 3 时有效
 min_length = 120
 max_length = 180
 if_need_spilt = True # 是否需要根据非逗号拆分字幕，时间戳根据字符长度比例拆分，并不一定准确。实验性功能，建议在连续多句字幕都无标点结尾时使用。
+srt_file = 'D:/MyFolders/Developments/0Python/230912_AdjustSubTitle/subtitle.srt'
+# 字幕的调整方式，
+# 1 为合并被断行的句子，
+# 2 在 1 的基础上，保证每行以非逗号结尾
+# 3 在 1-2 的基础上，保证每一行的字数不小于目标值
+adjust_mode = '3'
+
+# 从 config.json 中读取 zhipuai_api_key
+with open("config.json", "r") as f:
+    config = json.load(f)
+    zhipuai_api_key = config["zhipuai_api_key"]
 
 
 def main():
-    srt_file = 'D:/OneDrive/HR HK Lessons/5010 Stochastic Calculus/week3/HKUST Canvas - MAFS5010-L1.srt'
-    # 字幕的调整方式，
-    # 1 为合并被断行的句子，
-    # 2 在 1 的基础上，保证每行以非逗号结尾
-    # 3 在 1-2 的基础上，保证每一行的字数不小于目标值
-    adjust_mode = '3'
     adjust_srt_file(srt_file, adjust_mode)
+
+# 为输入的文本添加标点符号，调用智谱 AI：便宜，处理一般内容足够了
+def add_punctuation_zhipuai(inputText):
+    zhipuai.api_key = zhipuai_api_key
+    response = zhipuai.model_api.invoke(
+        model="chatglm_lite",
+        prompt=[
+            {"role": "user", "content": "(你好，我是李先生\n今天我们来讲历史)，请为括号内的文本添加标点符号，除了添加标点，不可以修改源文本,不要删除换行符。可以不加标点。返回值不应该包含括号"},
+            {"role": "assistant", "content": "你好，我是李先生。\n今天我们来讲历史。"},
+            {"role": "user", "content": f"({inputText})，请为括号内的文本添加标点符号，除了添加标点，不可以修改源文本，不要删除换行符。可以不加标点。返回值不应该包含括号"},
+        ]
+    )
+    # Sample response:{'code': 200, 'msg': '操作成功', 'data': {'request_id': '7941314437787463250', 'task_id': '7941314437787463250', 'task_status': 'SUCCESS', 'choices': [{'role': 'assistant', 'content': '" 说你们想听哪些历史人物？"'}], 'usage': {'total_tokens': 9}}, 'success': True}
+    # 直接打印 choices 中的第一个 content
+    # print(response)
+    # 检验是否成功
+    if response["success"] == False:
+        print("请求失败")
+        return None
+    else:
+        print("智谱 AI Token 数量：{}，花费{}元".format(response["data"]["usage"]["total_tokens"], response["data"]["usage"]["total_tokens"]/1000*0.002))
+        return response["data"]["choices"][0]["content"]
 
 def generate_output_file_path(srt_file):
     # 生成 output_file 的路径和文件名

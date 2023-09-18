@@ -1,27 +1,31 @@
 0
 00:00:00,000 --> 00:00:15,310
-Good evening, good to see a lot of you. So let's have a quick review of what we talked about last week.
+Good evening, good to see a lot of you.  So let's have a quick review of what we talked about last week.
 
 1
 00:00:15,310 --> 00:00:24,302
  So we talked about three kinds of products last week, a bond, forward and future.
 
 2
-00:00:24,302 --> 00:00:40,447
- So bond, you know the structure. You are going to receive a huge amount of money today or you are going to pay a huge amount of money. So the other side of the mortgage.
+00:00:24,302 --> 00:00:37,012
+ So bond, you know the structure. You are going to receive a huge amount of money today or you are going to pay a huge amount of money.
 
 3
-00:00:40,447 --> 00:00:57,103
- So you pay a huge amount of money and then you are going to receive a coupon payment for a fixed period.  So say every half year or every three months or something like that.
+00:00:37,012 --> 00:00:50,655
+ So the other side of the mortgage.  So you pay a huge amount of money and then you are going to receive a coupon payment for a fixed period.
 
 4
-00:00:57,103 --> 00:01:11,760
- And then at the end, the maturity day, you will get your principal back. You will get all your money back.  So this is a very safe product. And then we talked about forward.
+00:00:50,655 --> 00:01:05,159
+ So say every half year or every three months or something like that.  And then at the end, the maturity day, you will get your principal back. You will get all your money back.
 
 5
+00:01:05,159 --> 00:01:11,760
+ So this is a very safe product. And then we talked about forward.
+
+6
 00:01:11,760 --> 00:01:24,311
 So if you want to calculate the bond price, you will start to calculating all the future cash flows, discount all of them to today and then sum them up, you will get the bond price.
 
-6
+7
 00:01:24,311 --> 00:01:30,840
  So that's how we calculate bond price. So for forward, we go back to this page 16.
