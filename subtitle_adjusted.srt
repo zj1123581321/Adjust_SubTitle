@@ -1,31 +1,95 @@
 0
-00:00:00,000 --> 00:00:15,310
-Good evening, good to see a lot of you.  So let's have a quick review of what we talked about last week.
+00:00:00,320 --> 00:00:02,200
+ 大家好，我是余更哲老师。  
 
 1
-00:00:15,310 --> 00:00:24,302
- So we talked about three kinds of products last week, a bond, forward and future.
+00:00:02,200 --> 00:00:07,200
+今天咱们谈一下袁天罡和李淳风。  
 
 2
-00:00:24,302 --> 00:00:37,012
- So bond, you know the structure. You are going to receive a huge amount of money today or you are going to pay a huge amount of money.
+00:00:07,200 --> 00:00:08,200
+为什么谈这个呢？ 
 
 3
-00:00:37,012 --> 00:00:50,655
- So the other side of the mortgage.  So you pay a huge amount of money and then you are going to receive a coupon payment for a fixed period.
+00:00:08,200 --> 00:00:10,800
+我在咱们这个 B 站上问诸位朋友， 
 
 4
-00:00:50,655 --> 00:01:05,159
- So say every half year or every three months or something like that.  And then at the end, the maturity day, you will get your principal back. You will get all your money back.
+00:00:10,800 --> 00:00:12,400
+说你们想听哪些历史人物。  
 
 5
-00:01:05,159 --> 00:01:11,760
- So this is a very safe product. And then we talked about forward.
+00:00:12,400 --> 00:00:15,800
+结果有不少人提到袁天罡和李淳风。  
 
 6
-00:01:11,760 --> 00:01:24,311
-So if you want to calculate the bond price, you will start to calculating all the future cash flows, discount all of them to today and then sum them up, you will get the bond price.
+00:00:15,800 --> 00:00:17,200
+因为什么呢？ 
 
 7
-00:01:24,311 --> 00:01:30,840
- So that's how we calculate bond price. So for forward, we go back to this page 16.
+00:00:17,200 --> 00:00:22,100
+好像是说是现在有一个电视剧叫什么《盗墓笔记之龙岭石窟》吧。  
+
+8
+00:00:22,100 --> 00:00:23,900
+是不是？这个好像蛮火的。  
+
+9
+00:00:23,900 --> 00:00:25,600
+由此很多人对这个很有兴趣。  
+
+10
+00:00:25,600 --> 00:00:27,400
+而且袁天罡和李淳风。  
+
+11
+00:00:27,400 --> 00:00:29,200
+我估计你们有兴趣是啥原因。  
+
+12
+00:00:29,200 --> 00:00:31,000
+结果就是这俩人神秘。  
+
+13
+00:00:31,000 --> 00:00:32,600
+这俩人充满了一种神秘感。  
+
+14
+00:00:32,600 --> 00:00:36,000
+越是神秘的人物大家就越有兴趣。  
+
+15
+00:00:36,000 --> 00:00:39,000
+其实我首先要正本清源的说一下。  
+
+16
+00:00:39,000 --> 00:00:41,900
+李淳风和袁天罡。  
+
+17
+00:00:41,900 --> 00:00:43,300
+这两个人都是唐代的人。  
+
+18
+00:00:43,300 --> 00:00:45,300
+他们两个是同时代的。  
+
+19
+00:00:45,300 --> 00:00:49,800
+基本生活年代就是从隋一直到武则天时期。  
+
+20
+00:00:49,800 --> 00:00:52,400
+大概是这样的一个情况。  
+
+21
+00:00:52,400 --> 00:00:54,800
+那么李淳风他是今天陕西人。  
+
+22
+00:00:54,800 --> 00:00:57,200
+而袁天罡应该是四川人。  
+
+23
+00:00:57,200 --> 00:00:58,300
+然后这两位。
