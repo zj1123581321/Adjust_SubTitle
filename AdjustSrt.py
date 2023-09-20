@@ -2,15 +2,16 @@ import re
 import os
 import zhipuai
 import json
+import requests
 
 # 每行字幕的最短字数，adjust_mode 为 3 时有效
 min_length = 120
 max_length = 180
-if_need_spilt = True 
+if_need_spilt = False 
 # 是否需要根据非逗号拆分字幕，时间戳根据字符长度比例拆分，并不一定准确。实验性功能，建议在连续多句字幕都无标点结尾时使用。(主要应用于英文有标点场景)
-if_need_LLM_add_punctuation = True
+if_need_LLM_add_punctuation = False
 # 是否需要调用 AI 为文本添加标点符号以便处理，主要用于中文无标点场景。如果为 True，需要在 config.json 中配置相关 API。
-srt_file = 'D:/MyFolders/Developments/0Python/230912_AdjustSubTitle/subtitle.srt'
+srt_file = 'D:/OneDrive/HR HK Lessons/5310 Portfolio Optimization with R/week3/archive/5310 week3.srt'
 adjust_mode = '3'
 # 字幕的调整方式，
 # 1 为合并被断行的句子，
@@ -21,12 +22,14 @@ adjust_mode = '3'
 with open("config.json", "r") as f:
     config = json.load(f)
     zhipuai_api_key = config["zhipuai_api_key"]
+    openai_api_key =config["openai_api_key"]
+    openai_api_url = config["openai_api_url"]
 
 
 def main():
     adjust_srt_file(srt_file, adjust_mode)
 
-# 为输入的文本添加标点符号，调用智谱 AI：便宜，处理一般内容足够了
+# 为输入的文本添加标点符号，调用智谱 AI：返回效果一般，会胡乱合并。
 def add_punctuation_zhipuai(inputText):
     zhipuai.api_key = zhipuai_api_key
     response = zhipuai.model_api.invoke(
@@ -52,6 +55,36 @@ def add_punctuation_zhipuai(inputText):
         if outputText.startswith('"') and outputText.endswith('"'):
             outputText = outputText[1:-1]
         return outputText
+
+# 调用 gpt3.5 为输入的文本添加标点符号。使用自定义的 api url。函数功能和 add_punctuation_zhipuai 相同。
+def add_punctuation_openai(inputText):
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {openai_api_key}"
+    }
+
+    data = {
+        "model": "gpt-3.5-turbo",
+        "messages": [
+            {"role": "system", "content": "我会向你发送一段音频的转文字结果，请为每句话添加标点符号。务必保持原来的换行符，绝对不可以添加或删除换行符！"},
+            {"role": "user", "content": "你好，我是李先生\n今天我们来讲历史\n好像是说是现在有一个电视剧叫什么《盗墓笔记之龙岭石窟》吧"},
+            {"role": "assistant", "content": "你好，我是李先生。\n今天我们来讲历史。\n好像是说是现在有一个电视剧叫什么《盗墓笔记之龙岭石窟》吧。"},
+            {"role": "user", "content": inputText}
+        ]
+    }
+
+    response = requests.post(f"{openai_api_url}/v1/chat/completions", headers=headers, json=data)
+    response_data = response.json()
+
+    if "choices" in response_data and len(response_data["choices"]) > 0:
+        # $0.0015 为 prompt_tokens 的单价，$0.002 为 completion_tokens 的单价,根据单价计算本次请求的总花费：prompt_tokens*0.0015 + completion_tokens*0.002
+        print("openai api Token 数量：{}，花费{}元".format(response_data["usage"]["total_tokens"], response_data["usage"]["prompt_tokens"]/1000*0.0015*7.2 + response_data["usage"]["completion_tokens"]/1000*0.002*7.2))
+        outputText = response_data["choices"][0]["message"]["content"]
+        print('outputText', outputText)
+        return outputText
+    else:
+        # 抛出错误
+        raise Exception("openai api 返回的数据不正确")
 
 def generate_output_file_path(srt_file):
     # 生成 output_file 的路径和文件名
@@ -271,7 +304,7 @@ def write_new_srt_file(output_file, new_groups):
 
 # 为字幕文本添加标点，可以使用智谱AI，也可以使用 chatgpt。输入 old_groups，返回 new_groups
 def add_punctuation_service(old_groups):
-    max_text_length_per_request = 4000
+    max_text_length_per_request = 2000
     # 将 old_groups 的所有字幕文本(groups 里的第二项)拼接成一个字符串列表，每个字符串以换行符连接，长度不能超过 max_text_length_per_request。
     text_list = []
     text = ''
@@ -287,7 +320,7 @@ def add_punctuation_service(old_groups):
     # 对 text_list 中每一项调用智谱 AI 为文本添加标点符号。合并所有返回的文本，然后按换行符分割成列表，每一项就是新的字幕文本。
     new_text_list = []
     for text in text_list:
-        new_text = add_punctuation_zhipuai(text)
+        new_text = add_punctuation_openai(text)
         new_text_list.append(new_text)
     new_text = '\n'.join(new_text_list)
     print('加标点后文本',new_text)
@@ -333,3 +366,4 @@ def adjust_srt_file(srt_file, adjust_mode):
 
 if __name__ == '__main__':
     main()
+    # print(add_punctuation_openai('你好，我是李先生。今天我们来讲历史。\n好像是说是现在有一个电视剧\n叫什么《盗墓笔记之龙岭石窟》吧。'))
