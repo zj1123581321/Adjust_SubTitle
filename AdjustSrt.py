@@ -9,7 +9,7 @@ min_length = 120
 max_length = 180
 if_need_spilt = False
 # 是否需要根据非逗号拆分字幕，时间戳根据字符长度比例拆分，并不一定准确。实验性功能，建议在连续多句字幕都无标点结尾时使用。(主要应用于英文有标点场景)
-srt_file = 'D:/OneDrive/HR HK Lessons/5030 Quantitative Modeling of Derivatives Securities/week3/Archive/HKUST Canvas - MAFS5030-L1.srt'
+srt_file = 'D:/OneDrive/HR HK Lessons/5140 Statistical Methods in Quantitative Finance/week3/archive/5140 week3.srt'
 adjust_mode = '3'
 # 字幕的调整方式，
 # 1 为合并被断行的句子，
@@ -19,9 +19,6 @@ adjust_mode = '3'
 
 def main():
     adjust_srt_file(srt_file, adjust_mode)
-
-# 为输入的文本添加标点符号，调用智谱 AI。
-# 输入 json 格式的文本： {  "0": "大家好 我是余更哲老师",  "1": "今天咱们谈一下袁天罡和李淳风",  "2": "为什么谈这个呢"}，返回 json 格式的文本：{  "0": "大家好，我是余更哲老师。",  "1": "今天咱们谈一下袁天罡和李淳风。",  "2": "为什么谈这个呢？"}
 
 def generate_output_file_path(srt_file):
     # 生成 output_file 的路径和文件名
@@ -144,7 +141,8 @@ def adjust_srt_content(old_groups):
                 index += 1
     return new_groups
 
-# 保证每一行的结尾非逗号
+# 保证每一行的结尾非逗号，连续多行逗号就很尴尬(whisper 的幻觉重复情况)
+# 如果字符长度超过 max_length，就不再合并
 def adjust_srt_content_end_with_no_comma(old_groups):
     # 用于记录当前该处理 old_groups 中的第几个组
     current_number = 0
@@ -169,6 +167,9 @@ def adjust_srt_content_end_with_no_comma(old_groups):
                         # 判断 i+move_times 是否超出 old_groups 的索引范围
                         if i + move_times >= len(old_groups)-1:
                             move_times = 0
+                            break
+                        # 如果当前字幕文本加上下一个字幕文本的长度大于 max_length，就不再合并
+                        if len(text) + len(old_groups[i + move_times].strip().split('\n')[2:]) > max_length:
                             break
                         next_text = ' '.join(old_groups[i + move_times].strip().split('\n')[2:])
                         text = f"{text} {next_text}"
