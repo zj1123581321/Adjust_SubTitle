@@ -1,15 +1,18 @@
-import re
-import os
-import zhipuai
 import json
+import os
+import re
+
 import requests
+import zhipuai
 
 # 每行字幕的最短字数，adjust_mode 为 3 时有效
 min_length = 120
-max_length = 180
-if_need_spilt = False
+max_length = 220
+# min_length = 180
+# max_length = 400
+if_need_spilt = True
 # 是否需要根据非逗号拆分字幕，时间戳根据字符长度比例拆分，并不一定准确。实验性功能，建议在连续多句字幕都无标点结尾时使用。(主要应用于英文有标点场景)
-srt_file = 'D:/OneDrive/HR HK Lessons/5140 Statistical Methods in Quantitative Finance/week3/archive/5140 week3.srt'
+srt_file = 'D:/Downloads/ShareWithMacMini/RmBlank_HKUST Canvas - MAFS5040-L1. 2024-05-07 19.25. MAFS5040 (L1) - Quantitative Methods for Fixed-Income Instruments0.srt' 
 adjust_mode = '3'
 # 字幕的调整方式，
 # 1 为合并被断行的句子，
@@ -216,12 +219,13 @@ def adjust_srt_content_with_min_max(old_groups):
                             # move_times = 1
                             break
                         next_text = ' '.join(old_groups[i + move_times].strip().split('\n')[2:])
+                        print("next_text:",next_text)
                         # 如果当前字幕文本加上下一个字幕文本的长度大于 max_length，就不再合并
                         if len(text) + len(next_text) > max_length:
                             break
                         text = f"{text} {next_text}"
                         move_times += 1
-                    print(current_number, move_times, len(text))
+                    print("current_number:",current_number,"move_times:", move_times,"len(text):",len(text),"\n\n")
                     # 合并时间段和字幕文本
                     time_range_start = re.search(r'(\d{2}:\d{2}:\d{2},\d{3})', time_range).group(1)
                     next_time_range_end = re.findall(r'(\d{2}:\d{2}:\d{2},\d{3})', old_groups[i + move_times-1])[1]
