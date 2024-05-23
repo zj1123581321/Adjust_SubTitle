@@ -6,13 +6,20 @@ import requests
 import zhipuai
 
 # 每行字幕的最短字数，adjust_mode 为 3 时有效
-min_length = 120
-max_length = 220
-# min_length = 180
-# max_length = 400
-if_need_spilt = True
+# 英文转录参数
+# min_length = 120
+# max_length = 220
+# if_need_spilt = True
 # 是否需要根据非逗号拆分字幕，时间戳根据字符长度比例拆分，并不一定准确。实验性功能，建议在连续多句字幕都无标点结尾时使用。(主要应用于英文有标点场景)
-srt_file = 'D:/Downloads/ShareWithMacMini/RmBlank_HKUST Canvas - MAFS5040-L1. 2024-05-07 19.25. MAFS5040 (L1) - Quantitative Methods for Fixed-Income Instruments0.srt' 
+# 中文转录测试
+min_length = 150
+max_length = 220
+if_need_spilt = False
+
+srt_file = 'D:/MyFolders/Developments/0Python/230912_AdjustSubTitle/Sample/sampleLrc_adjusted.srt' 
+# 文本连接符号，英文为空格，中文不需要。
+text_connector = ''
+
 adjust_mode = '3'
 # 字幕的调整方式，
 # 1 为合并被断行的句子，
@@ -119,19 +126,19 @@ def adjust_srt_content(old_groups):
                 text = ' '.join(group[2:])
                 print(i,text)
                 # 当前字幕文本不以标点结尾，则向后找到第一个不以逗号结尾的字幕文本；否则直接写入 new_groups
-                if text.endswith(('.', ',', ':', ';', '?', '!')):
+                if text.endswith(('.', ',', ':', ';', '?', '!', '，', '。', '：', '；', '？', '！')):
                     new_groups.append(f"{index}\n{time_range}\n{text}")
                     current_number += 1 
                 else:
                     move_times = 1
                     # 如果当前句子结尾不是标点符号
-                    while not text.endswith(('.', ',', ':', ';', '?', '!')):
+                    while not text.endswith(('.', ',', ':', ';', '?', '!', '，', '。', '：', '；', '？', '！')):
                         # 判断 i+move_times 是否超出 old_groups 的索引范围
                         if i + move_times >= len(old_groups)-1:
                             move_times = 0
                             break
                         next_text = ' '.join(old_groups[i + move_times].strip().split('\n')[2:])
-                        text = f"{text} {next_text}"
+                        text = f"{text}{text_connector}{next_text}"
                         move_times += 1
                     print(i, move_times)
                     # 合并时间段和字幕文本
@@ -175,7 +182,7 @@ def adjust_srt_content_end_with_no_comma(old_groups):
                         if len(text) + len(old_groups[i + move_times].strip().split('\n')[2:]) > max_length:
                             break
                         next_text = ' '.join(old_groups[i + move_times].strip().split('\n')[2:])
-                        text = f"{text} {next_text}"
+                        text = f"{text}{text_connector}{next_text}"
                         move_times += 1
                     # 合并时间段和字幕文本
                     time_range_start = re.search(r'(\d{2}:\d{2}:\d{2},\d{3})', time_range).group(1)

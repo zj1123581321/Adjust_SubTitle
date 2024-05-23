@@ -49,7 +49,7 @@ def add_punctuation_openai(inputText):
     data = {
         "model": "gpt-3.5-turbo",
         "messages": [
-            {"role": "system", "content": "你是一个专业的审校人员。你会收到一段音频的转文字结果,以 .lrc 格式存储。请结合语义和上下文，如果一句话被拆分成了不同行的字幕，请将它们合并,以非逗号结尾，但整句话不宜过长。同时需要给字幕文本添加标点符号。以 .lrc 格式返回。"},
+            {"role": "system", "content": "你是为音频转录生成的 LRC 格式字幕添加标点符号的专家。保留原始单词，仅插入必要的标点符号，例如句号、逗号、大写字母、美元符号或百分号等符号以及格式。如果结合下一行判断此行无需添加标点，则可以不添加标点。仅使用提供的上下文，返回添加标点后的 LRC 格式字幕文本"},
             {"role": "user", "content": f"{inputText}"}
         ]
     }
@@ -58,8 +58,8 @@ def add_punctuation_openai(inputText):
     response_data = response.json()
 
     if "choices" in response_data and len(response_data["choices"]) > 0:
-        # $0.0015 为 prompt_tokens 的单价，$0.002 为 completion_tokens 的单价,根据单价计算本次请求的总花费：prompt_tokens*0.0015 + completion_tokens*0.002
-        print("openai api Token 数量：{}，花费{}元".format(response_data["usage"]["total_tokens"], response_data["usage"]["prompt_tokens"]/1000*0.0015*7.2 + response_data["usage"]["completion_tokens"]/1000*0.002*7.2))
+        # $0.0005 为 prompt_tokens 的单价，$0.0015 为 completion_tokens 的单价,根据单价计算本次请求的总花费：prompt_tokens*0.0015 + completion_tokens*0.002
+        print("openai api Token 数量：{}，花费{}元".format(response_data["usage"]["total_tokens"], response_data["usage"]["prompt_tokens"]/1000*0.0005*7.2 + response_data["usage"]["completion_tokens"]/1000*0.0015*7.2))
         outputText = response_data["choices"][0]["message"]["content"]
         print('##outputText:\n', outputText)
         return outputText
@@ -82,7 +82,7 @@ def add_punctuation_service(captionList):
             text_list.append(text)
             text = ''
     text_list.append(text)
-    # 对 text_list 中每一项调用智谱 AI 为文本添加标点符号。合并所有返回的文本，然后按换行符分割成列表，每一项就是新的字幕文本。
+    # 对 text_list 中每一项调用 AI 为文本添加标点符号。合并所有返回的文本，然后按换行符分割成列表，每一项就是新的字幕文本。
     new_text_list = []
     for text in text_list:
         new_text = add_punctuation_openai(text)
@@ -138,14 +138,14 @@ def lrc_to_srt(lrc):
 # 主函数，读取 lrc 文件，调用 add_punctuation_service 为字幕文本添加标点，然后将结果写入新的 lrc 文件。
 def main():
     # 读取 lrc 文件
-    with open("sampleLrc.lrc", "r", encoding="utf-8") as f:
+    with open("Sample/sampleLrc.lrc", "r", encoding="utf-8") as f:
         lrc = f.read()
     # 将 lrc 按换行符分割成列表 captaionList，每一项就是一条字幕
         captionList = lrc.split("\n")
     # print("captionList", captionList)
     newCaption = add_punctuation_service(captionList)
     # 将 newCaption 写入新的 lrc 文件
-    output_file = generate_output_file_path("sampleLrc.lrc")
+    output_file = generate_output_file_path("Sample/sampleLrc.lrc")
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(newCaption)
     # 将 lrc 转换成 srt
