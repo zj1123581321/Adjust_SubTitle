@@ -16,7 +16,7 @@ min_length = 120
 max_length = 220
 if_need_spilt = False
 
-srt_file = 'D:/MyFolders/Developments/0Python/230912_AdjustSubTitle/Sample/sampleSrt_add_punctuation.srt' 
+srt_file = 'D:/我的坚果云/中国城夜总会剿匪记_add_punctuation.srt' 
 # 文本连接符号，英文为空格，中文不需要。
 text_connector = ''
 

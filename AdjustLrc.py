@@ -101,10 +101,10 @@ def add_punctuation_deepseek(inputText):
     else:
         print("response_data", response_data)
         # 抛出错误
-        raise Exception("openai api 返回的数据不正确")
+        raise Exception("deepseek api 返回的数据不正确")
     
 # 为字幕文本添加标点，可以使用智谱AI，也可以使用 chatgpt。输入 captionList，返回 new_groups
-def add_punctuation_service(captionList):
+def add_punctuation_service(captionList,service='deepseek'):
     # 最大中文长度，采取 max_token/2.5 估算。
     max_text_length_per_request = 1500
     # 将 captionList 的所有字幕文本(groups 里的第二项)拼接成一个字符串列表，每个字符串以换行符连接，长度不能超过 max_text_length_per_request。
@@ -120,8 +120,12 @@ def add_punctuation_service(captionList):
     # 对 text_list 中每一项调用 AI 为文本添加标点符号。合并所有返回的文本，然后按换行符分割成列表，每一项就是新的字幕文本。
     new_text_list = []
     for text in text_list:
-        # new_text = add_punctuation_openai(text)
-        new_text = add_punctuation_deepseek(text)
+        if service == 'zhipuai':
+            new_text = add_punctuation_zhipuai(text)
+        elif service == 'openai':
+            new_text = add_punctuation_openai(text)
+        elif service == 'deepseek':
+            new_text = add_punctuation_deepseek(text)
         new_text_list.append(new_text)
     new_text = '\n'.join(new_text_list)
     print('文本处理后：',new_text)
@@ -136,70 +140,73 @@ def generate_output_file_path(lrc_file):
     print(output_file)
     return output_file
 
+def lrc2srt_file_path(lrc_file):
+    # 生成 srt_file 的路径和文件名
+    directory = os.path.dirname(lrc_file)
+    filename = os.path.basename(lrc_file)
+    new_filename = filename.replace('.lrc', '.srt')
+    srt_file = os.path.join(directory, new_filename)
+    print(srt_file)
+    return srt_file
+
 # 将 lrc 格式字幕转换成 srt 格式，输入 lrc 文本，返回 srt 文本。
-def lrc_to_srt(lrc):
-    # 将 LRC 文本按行分割
-    lines = lrc.split('\n')
-    
-    # 初始化 SRT 文本和计数器
-    srt = ''
-    count = 1
-    
-    # 遍历每一行 LRC 文本
-    for i in range(len(lines) - 1):
-        line = lines[i]
-        
-        # 使用正则表达式提取时间戳和歌词内容
-        match = re.match(r'\[(\d+):(\d+\.\d+)\](.*)', line)
-        if match:
-            # 提取分钟、秒及百分之一秒
-            minutes = int(match.group(1))
-            seconds = float(match.group(2))
-            content = match.group(3).strip()
-            
-            # 计算小时数和总秒数
-            hours = minutes // 60
-            minutes = minutes % 60
-            
-            # 格式化当前行的开始时间
-            start_time = f'{hours:02}:{minutes:02}:{seconds:06.3f}'.replace('.', ',')
-            
-            # 尝试获取下一行的时间戳作为当前行的结束时间
-            next_line = lines[i + 1]
-            next_match = re.match(r'\[(\d+):(\d+\.\d+)\]', next_line)
-            if next_match:
-                next_minutes = int(next_match.group(1))
-                next_seconds = float(next_match.group(2))
-                next_hours = next_minutes // 60
-                next_minutes = next_minutes % 60
-                end_time = f'{next_hours:02}:{next_minutes:02}:{next_seconds:06.3f}'.replace('.', ',')
-            else:
-                # 如果没有下一行时间戳，可以假设当前行持续一秒
-                end_time = f'{hours:02}:{minutes:02}:{seconds+1:06.3f}'.replace('.', ',')
-            
-            # 将 SRT 时间戳和内容添加到 SRT 文本中
-            srt += f'{count}\n{start_time} --> {end_time}\n{content}\n\n'
-            count += 1
-    
-    return srt.strip()
+def parse_lrc_timestamp(timestamp):
+    try:
+        parts = timestamp.split(':')
+        if len(parts) == 3:
+            hours, minutes, seconds = parts
+        elif len(parts) == 2:
+            hours = 0
+            minutes, seconds = parts
+        else:
+            return None
+
+        seconds, milliseconds = seconds.split('.')
+        hours, minutes, seconds, milliseconds = int(hours), int(minutes), int(seconds), int(milliseconds)
+        return hours * 3600 + minutes * 60 + seconds + milliseconds / 1000
+    except ValueError:
+        return None
+
+def format_time(seconds):
+    hours = int(seconds) // 3600
+    minutes = (int(seconds) % 3600) // 60
+    seconds = int(seconds) % 60
+    milliseconds = int((seconds - int(seconds)) * 1000)
+    return f"{hours:02d}:{minutes:02d}:{seconds:02d},{milliseconds:03d}"
+
+def lrc_to_srt(lrc_content):
+    subs = []
+    pattern = r'\[(\d+:\d+:\d+\.\d+|\d+:\d+\.\d+)\](.*)'
+    matches = re.findall(pattern, lrc_content)
+    for idx, match in enumerate(matches):
+        timestamp, text = match
+        start_time = parse_lrc_timestamp(timestamp)
+        if start_time is not None:
+            end_time = parse_lrc_timestamp(matches[idx + 1][0]) if idx + 1 < len(matches) else start_time + 1
+            subs.append(f"{len(subs) + 1}\n{format_time(start_time)} --> {format_time(end_time)}\n{text.strip()}\n")
+    return ''.join(subs)
 
 # 主函数，读取 lrc 文件，调用 add_punctuation_service 为字幕文本添加标点，然后将结果写入新的 lrc 文件。
 def main():
+    lrc_file = "D:/我的坚果云/中国城夜总会剿匪记.lrc"
+    # LLM_service = 'deepseek'
+    LLM_service = 'openai'
     # 读取 lrc 文件
-    with open("Sample/sampleLrc.lrc", "r", encoding="utf-8") as f:
+    with open(lrc_file, "r", encoding="utf-8") as f:
         lrc = f.read()
     # 将 lrc 按换行符分割成列表 captaionList，每一项就是一条字幕
         captionList = lrc.split("\n")
     # print("captionList", captionList)
-    newCaption = add_punctuation_service(captionList)
+    # newCaption = add_punctuation_service(captionList,LLM_service)
+    newCaption = lrc
     # 将 newCaption 写入新的 lrc 文件
-    output_file = generate_output_file_path("Sample/sampleLrc.lrc")
+    output_file = generate_output_file_path(lrc_file)
     with open(output_file, "w", encoding="utf-8") as f:
         f.write(newCaption)
     # 将 lrc 转换成 srt
     srt = lrc_to_srt(newCaption)
     # 将 srt 写入新的 srt 文件
-    with open("Sample/sampleSrt_add_punctuation.srt", "w", encoding="utf-8") as f:
+    with open(lrc2srt_file_path(output_file), "w", encoding="utf-8") as f:
         f.write(srt)
 
 if __name__ == "__main__":
