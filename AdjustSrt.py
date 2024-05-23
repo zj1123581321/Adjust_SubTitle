@@ -12,11 +12,11 @@ import zhipuai
 # if_need_spilt = True
 # 是否需要根据非逗号拆分字幕，时间戳根据字符长度比例拆分，并不一定准确。实验性功能，建议在连续多句字幕都无标点结尾时使用。(主要应用于英文有标点场景)
 # 中文转录测试
-min_length = 150
+min_length = 120
 max_length = 220
 if_need_spilt = False
 
-srt_file = 'D:/MyFolders/Developments/0Python/230912_AdjustSubTitle/Sample/sampleLrc_adjusted.srt' 
+srt_file = 'D:/MyFolders/Developments/0Python/230912_AdjustSubTitle/Sample/sampleSrt_add_punctuation.srt' 
 # 文本连接符号，英文为空格，中文不需要。
 text_connector = ''
 

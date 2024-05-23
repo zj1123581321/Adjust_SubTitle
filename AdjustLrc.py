@@ -13,7 +13,9 @@ if if_need_LLM_add_punctuation:
         zhipuai_api_key = config["zhipuai_api_key"]
         openai_api_key =config["openai_api_key"]
         openai_api_url = config["openai_api_url"]
+        deepseek_api_key = config["deepseek_api_key"]
 
+# 智谱，垃圾
 def add_punctuation_zhipuai(inputText):
     zhipuai.api_key = zhipuai_api_key
     response = zhipuai.model_api.invoke(
@@ -51,7 +53,11 @@ def add_punctuation_openai(inputText):
         "messages": [
             {"role": "system", "content": "你是为音频转录生成的 LRC 格式字幕添加标点符号的专家。保留原始单词，仅插入必要的标点符号，例如句号、逗号、大写字母、美元符号或百分号等符号以及格式。如果结合下一行判断此行无需添加标点，则可以不添加标点。仅使用提供的上下文，返回添加标点后的 LRC 格式字幕文本"},
             {"role": "user", "content": f"{inputText}"}
-        ]
+        ],
+        "frequency_penalty":0,
+        "presence_penalty":0,
+        "temperature":0.6,
+        "top_p":1
     }
 
     response = requests.post(f"{openai_api_url}/v1/chat/completions", headers=headers, json=data)
@@ -68,6 +74,35 @@ def add_punctuation_openai(inputText):
         # 抛出错误
         raise Exception("openai api 返回的数据不正确")
 
+# 使用 deepseek api 添加标点 
+def add_punctuation_deepseek(inputText):
+    # https://platform.deepseek.com/api-docs/
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {deepseek_api_key}"
+    }
+
+    data = {
+        "model": "deepseek-chat",
+        "messages": [
+            {"role": "system", "content": "你是为音频转录生成的 LRC 格式字幕添加标点符号的专家。保留原始单词，仅插入必要的标点符号，例如句号、逗号、大写字母、美元符号或百分号等符号以及格式。如果结合下一行判断此行无需添加标点，则可以不添加标点。仅使用提供的上下文，返回添加标点后的 LRC 格式字幕文本"},
+            {"role": "user", "content": f"{inputText}"}
+        ],
+        "temperature":0.6
+    }
+
+    response = requests.post("https://api.deepseek.com/chat/completions", headers=headers, json=data)
+    response_data = response.json()
+
+    if "choices" in response_data and len(response_data["choices"]) > 0:
+        outputText = response_data["choices"][0]["message"]["content"]
+        print('##outputText:\n', outputText)
+        return outputText
+    else:
+        print("response_data", response_data)
+        # 抛出错误
+        raise Exception("openai api 返回的数据不正确")
+    
 # 为字幕文本添加标点，可以使用智谱AI，也可以使用 chatgpt。输入 captionList，返回 new_groups
 def add_punctuation_service(captionList):
     # 最大中文长度，采取 max_token/2.5 估算。
@@ -85,7 +120,8 @@ def add_punctuation_service(captionList):
     # 对 text_list 中每一项调用 AI 为文本添加标点符号。合并所有返回的文本，然后按换行符分割成列表，每一项就是新的字幕文本。
     new_text_list = []
     for text in text_list:
-        new_text = add_punctuation_openai(text)
+        # new_text = add_punctuation_openai(text)
+        new_text = add_punctuation_deepseek(text)
         new_text_list.append(new_text)
     new_text = '\n'.join(new_text_list)
     print('文本处理后：',new_text)
@@ -95,7 +131,7 @@ def generate_output_file_path(lrc_file):
     # 生成 output_file 的路径和文件名
     directory = os.path.dirname(lrc_file)
     filename = os.path.basename(lrc_file)
-    new_filename = filename.replace('.lrc', '_adjusted.lrc')
+    new_filename = filename.replace('.lrc', '_add_punctuation.lrc')
     output_file = os.path.join(directory, new_filename)
     print(output_file)
     return output_file
@@ -110,27 +146,39 @@ def lrc_to_srt(lrc):
     count = 1
     
     # 遍历每一行 LRC 文本
-    for i in range(len(lines)):
+    for i in range(len(lines) - 1):
         line = lines[i]
         
         # 使用正则表达式提取时间戳和歌词内容
-        match = re.match(r'\[(\d+:\d+\.\d+)\](.*)', line)
+        match = re.match(r'\[(\d+):(\d+\.\d+)\](.*)', line)
         if match:
-            timestamp = match.group(1)
-            content = match.group(2).strip()
+            # 提取分钟、秒及百分之一秒
+            minutes = int(match.group(1))
+            seconds = float(match.group(2))
+            content = match.group(3).strip()
             
-            # 将时间戳格式转换为 SRT 格式
-            srt_timestamp = timestamp.replace('.', ',')
+            # 计算小时数和总秒数
+            hours = minutes // 60
+            minutes = minutes % 60
             
-            # 获取下一行的时间戳
-            next_line = lines[i + 1] if i < len(lines) - 1 else ''
-            next_match = re.match(r'\[(\d+:\d+\.\d+)\]', next_line)
+            # 格式化当前行的开始时间
+            start_time = f'{hours:02}:{minutes:02}:{seconds:06.3f}'.replace('.', ',')
+            
+            # 尝试获取下一行的时间戳作为当前行的结束时间
+            next_line = lines[i + 1]
+            next_match = re.match(r'\[(\d+):(\d+\.\d+)\]', next_line)
             if next_match:
-                next_timestamp = next_match.group(1)
-                srt_timestamp += ' --> ' + next_timestamp.replace('.', ',')
+                next_minutes = int(next_match.group(1))
+                next_seconds = float(next_match.group(2))
+                next_hours = next_minutes // 60
+                next_minutes = next_minutes % 60
+                end_time = f'{next_hours:02}:{next_minutes:02}:{next_seconds:06.3f}'.replace('.', ',')
+            else:
+                # 如果没有下一行时间戳，可以假设当前行持续一秒
+                end_time = f'{hours:02}:{minutes:02}:{seconds+1:06.3f}'.replace('.', ',')
             
             # 将 SRT 时间戳和内容添加到 SRT 文本中
-            srt += f'{count}\n{srt_timestamp}\n{content}\n\n'
+            srt += f'{count}\n{start_time} --> {end_time}\n{content}\n\n'
             count += 1
     
     return srt.strip()
@@ -151,7 +199,7 @@ def main():
     # 将 lrc 转换成 srt
     srt = lrc_to_srt(newCaption)
     # 将 srt 写入新的 srt 文件
-    with open("sampleSrt.srt", "w", encoding="utf-8") as f:
+    with open("Sample/sampleSrt_add_punctuation.srt", "w", encoding="utf-8") as f:
         f.write(srt)
 
 if __name__ == "__main__":
